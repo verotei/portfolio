@@ -1,6 +1,4 @@
-# Portfolio de Vero
-
-Bienvenidos a mi portfolio de proyectos en datos 📊  
+# Bienvenidos a mi portfolio de proyectos en datos 📊  
 
 Este repo está en construcción (work in progress). Prefiero publicar y mejorar que esperar lo perfecto.
 
