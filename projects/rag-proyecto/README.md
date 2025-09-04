@@ -21,7 +21,7 @@ Así, el modelo puede responder preguntas con información contextualizada y rel
 ---
 
 ## 📂 Estructura del repo
-- `notebooks/` → notebook principal con la demo (incluye outputs ejecutados)  
+- `notebook/` → notebook principal con la demo (incluye outputs ejecutados)  
 - `data/` → documentos de ejemplo (en este caso un PDF)
 - `outputs/` → ejemplos de respuestas generadas (capturas de pantalla)
 - `requirements.txt` → librerías necesarias  
