@@ -7,7 +7,7 @@ Ahí conocí en detalle los **Transformers**, una arquitectura que me voló la c
 
 ## ✨ ¿De qué se trata?
 La idea es simple, en vez de que un modelo de lenguaje responda solo con lo que aprendió en su entrenamiento, le damos **contexto extra** conectándolo a una base vectorial con documentos propios.  
-Así, el modelo puede responder preguntas con información contextualizada y relevante**.
+Así, el modelo puede responder preguntas con información contextualizada y relevante.
 
 ---
 
