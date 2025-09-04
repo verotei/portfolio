@@ -35,12 +35,7 @@ El proyecto está diseñado para correrse en **Google Colab**, con los documento
 
 Pasos básicos:
 1. Abrí el notebook en Colab.  
-2. Montá tu Google Drive al inicio del notebook:  
-   ```python
-   from google.colab import drive
-   drive.mount('/content/drive')
-
-3. En tu Drive creá la carpeta "Proyecto RAG"
-4. Subí en esa carpeta los documentos PDF con los que vas a trabajar o usá el de este proyecto.
-5. La ruta por defecto del notebook ya apunta a: `ruta_directorio = "/content/drive/MyDrive/Proyecto RAG"`
-6. Ejecutá el notebook: cargará automáticamente todos los PDFs guardados en esa carpeta.
+2. En tu Drive creá la carpeta "Proyecto RAG"
+3. Subí en esa carpeta los documentos PDFs con los que vas a trabajar o usá el de este proyecto que vas a encontrar dentro de la carpeta data.
+4. La ruta por defecto del notebook ya apunta a: `ruta_directorio = "/content/drive/MyDrive/Proyecto RAG"`
+5. Ejecutá el notebook: cargará automáticamente todos los PDFs guardados en esa carpeta.
