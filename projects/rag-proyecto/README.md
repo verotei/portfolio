@@ -1,6 +1,6 @@
 # 🚀 Retrieval Augmented Generation (RAG): validación inicial y proyección
 
-Este proyecto surge de lo aprendido en la materia **Minería de Textos** del posgrado en **Inteligencia de Datos orientado a Big Data** (UNLP), con el profesor **Marcelo Errecalde**.  
+Este proyecto surge de lo aprendido en la materia **Minería de Textos** de la **Especialización en Inteligencia de Datos orientada a Big Data** (UNLP), con el profesor **Marcelo Errecalde**.  
 Ahí conocí en detalle los **Transformers**, una arquitectura que me voló la cabeza y me inspiró a armar este prototipo de RAG.
 
 ---
