@@ -29,8 +29,18 @@ Así, el modelo puede responder preguntas con información contextualizada y rel
 
 ---
 
-## ⚡ Cómo correrlo
-1. Cloná el repo o bajate la carpeta.  
-2. Instalá dependencias:  
-   ```bash
-   pip install -r requirements.txt
+## ☁️ Entorno de ejecución en Google Colab
+
+El proyecto está diseñado para correrse en **Google Colab**, con los documentos almacenados en **Google Drive**.
+
+Pasos básicos:
+1. Abrí el notebook en Colab.  
+2. Montá tu Google Drive al inicio del notebook:  
+   ```python
+   from google.colab import drive
+   drive.mount('/content/drive')
+
+3. En tu Drive creá la carpeta "Proyecto RAG"
+4. Subí en esa carpeta los documentos PDF con los que vas a trabajar o usá el de este proyecto.
+5. La ruta por defecto del notebook ya apunta a: `ruta_directorio = "/content/drive/MyDrive/Proyecto RAG"`
+6. Ejecutá el notebook: cargará automáticamente todos los PDFs guardados en esa carpeta.
