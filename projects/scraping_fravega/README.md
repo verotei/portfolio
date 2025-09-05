@@ -1,4 +1,4 @@
-# Scraper de productos – Frávega 🛒
+# Scraper de productos – Frávega 🛒 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Proyecto de scraping sobre el e-commerce **Frávega**.  
 
