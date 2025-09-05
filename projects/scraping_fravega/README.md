@@ -17,7 +17,7 @@ El script:
   - Precio de lista
   - Link al producto
   - Descuento calculado
-- Genera un **archivo Excel** con la fecha de relevamiento incluida en el nombre.
+- Genera un **archivo Excel**.
 
 ---
 
