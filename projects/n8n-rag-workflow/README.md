@@ -1,4 +1,4 @@
-# n8n-rag-workflow 🤖🔗
+# n8n-rag-workflow 🤖🔗 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 Proyecto de **Retrieval Augmented Generation (RAG)** implementado en **n8n**.  
 En este caso uso como ejemplo un documento ficticio de **políticas de devolución de una empresa** para mostrar cómo transformarlo en un **sistema de consulta tipo chatbot**.  
