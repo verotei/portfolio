@@ -16,7 +16,7 @@ Este repositorio contiene dos workflows principales en **n8n**:
    - Genera **embeddings** usando el modelo `text-embedding-3-small` de OpenAI.  
    - Guarda los embeddings en un índice de **Pinecone**.
 
-2. **Agente de consultas (Query Workflow)**  
+2. **Agente de consultas (Agente RAG)**  
    - Recibe preguntas del usuario.  
    - Busca contexto en Pinecone.  
    - Genera respuestas usando un modelo de OpenAI (ej: `gpt-4o-mini`), enriquecidas con la información del documento.
@@ -65,12 +65,12 @@ En **n8n** es necesario configurar:
 
 ## ▶️ Uso
 1. Colocar uno o varios documentos en la carpeta de Google Drive: **`demo-rag`**.  
-2. Ejecutar el **Ingest Workflow**:  
+2. Ejecutar el **Input RAG Workflow**:  
    - Extrae todos los documentos desde Drive.  
    - Los procesa en chunks.  
    - Genera embeddings con OpenAI.  
    - Inserta los embeddings en Pinecone.  
-3. Lanzar el **Query Workflow** y probar preguntas como:  
+3. Lanzar el **Agente RAG** y probar preguntas como:  
    - “¿Cuál es el plazo máximo para devolver un producto?”  
    - “¿Qué documentos necesito para gestionar una devolución?”  
    - “¿Las devoluciones tienen costo para el cliente?”  
@@ -88,4 +88,6 @@ Este proyecto muestra cómo un RAG puede servir para:
 ## 🖼️ Diagrama del flujo
 
 ![Input RAG Workflow](workflows/Diagrama_input_RAG.jpg)
+
+![Agente RAG Workflow](workflows/Diagrama_Agente_RAG.jpg)
 
