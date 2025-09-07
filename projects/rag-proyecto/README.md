@@ -25,7 +25,7 @@ Así, el modelo puede responder preguntas con información contextualizada y rel
 - `data/` → documentos de ejemplo (en este caso un PDF)
 - `outputs/` → ejemplos de respuestas generadas (capturas de pantalla)
 - `requirements.txt` → librerías necesarias  
-- `README.md` → esta explicación  
+- `README.md` → documentación principal del proyecto
 
 ---
 
