@@ -87,5 +87,5 @@ Este proyecto muestra cómo un RAG puede servir para:
 
 ## 🖼️ Diagrama del flujo
 
-![Input RAG Workflow](workflows/Screenshot_input_RAG .jpg)
+![Input RAG Workflow](workflows/Diagrama_input_RAG.jpg)
 
