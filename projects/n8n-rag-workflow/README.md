@@ -26,7 +26,7 @@ Este repositorio contiene dos workflows principales en **n8n**:
 ## 📁 Contenido
 - `README.md` → Documentación principal del proyecto.  
 - `LICENSE` → Archivo con la licencia del proyecto.  
-- `workflows/` → JSON de los dos workflows de n8n.  
+- `workflows/` → JSON + screenshots de los dos workflows de n8n
 - `docs/` → Documento de ejemplo (para subir a Drive).  
 - `outputs/` → Ejemplos de consultas y respuestas generadas.  
 
