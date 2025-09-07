@@ -1,0 +1,295 @@
+{
+  "name": "Input_rag",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        512,
+        288
+      ],
+      "id": "7d202d3d-b3b5-48eb-8d80-f4b3aaaa67ff",
+      "name": "Descarga",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4IVBUU0XW1kJSymZ",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        736,
+        288
+      ],
+      "id": "ebda4a2b-2995-419f-8e6d-c5105e77edcf",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "demo-rag",
+          "mode": "list",
+          "cachedResultName": "demo-rag"
+        },
+        "options": {
+          "pineconeNamespace": "politicas_devolucion"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1,
+      "position": [
+        960,
+        80
+      ],
+      "id": "fadd0452-3d93-4965-9b4e-3f26fcf94a90",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "BpL8cyCBOjgFXPbn",
+          "name": "PineconeApi account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        944,
+        416
+      ],
+      "id": "af95e7c9-267f-4464-ae22-d96801773d27",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "Y0ZqothdFLkSs00M",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "name",
+                "value": "={{ $json.name }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        304
+      ],
+      "id": "e50d8e45-73c6-44a0-ad6e-0232812cc257",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 350,
+        "chunkOverlap": 50,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        512
+      ],
+      "id": "c41794f9-5c56-4bea-be74-cc8cc9c6604c",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "126-fPc5zChsq3Va0fD6BQYpFd9eKDf_c",
+            "mode": "list",
+            "cachedResultName": "demo-rag",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/126-fPc5zChsq3Va0fD6BQYpFd9eKDf_c"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        288,
+        288
+      ],
+      "id": "0f522193-d9c9-4775-8fda-c2f4d5bc5084",
+      "name": "Busca_carpeta",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "4IVBUU0XW1kJSymZ",
+          "name": "Google Drive account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# INPUT RAG",
+        "height": 704,
+        "width": 1472,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "45adba36-7c73-4137-848b-59d58775ae42",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        48,
+        288
+      ],
+      "id": "681ba03a-7f3b-4f9e-b86e-fa8ed5b418ec",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Descarga": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca_carpeta": {
+      "main": [
+        [
+          {
+            "node": "Descarga",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Busca_carpeta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ddea9f0b-e48a-4384-b6dd-987bbc716d1b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b1af7223fb1a51e3e8780d1affb0751d38b4bea4c4e799d4a59c54c60ebfd8d"
+  },
+  "id": "vwLA2kKiyeZucJ8F",
+  "tags": [
+    {
+      "name": "rag",
+      "id": "diBwiXXw51nMdavV",
+      "createdAt": "2025-09-07T22:25:06.753Z",
+      "updatedAt": "2025-09-07T22:25:06.753Z"
+    }
+  ]
+}
