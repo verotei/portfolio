@@ -10,7 +10,7 @@ En este caso uso como ejemplo un documento ficticio de **políticas de devoluci�
 ## 🚀 Descripción
 Este repositorio contiene dos workflows principales en **n8n**:
 
-1. **Carga de documentos (Ingest Workflow)**  
+1. **Carga de documentos (Input RAG Workflow)**  
    - Toma **todos los documentos** disponibles en una carpeta de Google Drive (`demo-rag`).  
    - Los divide en *chunks* de texto.  
    - Genera **embeddings** usando el modelo `text-embedding-3-small` de OpenAI.  
@@ -86,12 +86,6 @@ Este proyecto muestra cómo un RAG puede servir para:
 ---
 
 ## 🖼️ Diagrama del flujo
-```mermaid
-flowchart TD
-    A[Google Drive 📂 demo-rag] --> B[Ingest Workflow 🔄]
-    B --> C[OpenAI Embeddings 🧩 text-embedding-3-small]
-    C --> D[Pinecone 🗄️ demo-rag index]
-    E[Query Workflow 💬] --> D
-    D --> F[OpenAI GPT 🧠 gpt-4o-mini]
-    F --> G[Respuesta al usuario ✅]
+
+![Input RAG Workflow](workflows/Screenshot_input_RAG.jpg)
 
