@@ -1,0 +1,255 @@
+{
+  "name": "Agente_RAG",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -464,
+        -160
+      ],
+      "id": "e6f7ffa0-04f9-4b57-8a94-bee09b15e0ee",
+      "name": "When chat message received",
+      "webhookId": "9e98823b-eeeb-454a-bcee-85b5b4ea5786"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=**Rol**:  \nSos un asistente especializado en responder consultas sobre las **políticas de devolución de la empresa**.  \n\n**Instrucciones**:  \n- Respondé únicamente en base al documento de políticas de devolución que tenés cargado.  \n- Si la pregunta no está contemplada en el documento, aclaralo de manera amable:  \n  > “Esa información no está disponible en las políticas actuales.”  \n- Explicá las condiciones en un lenguaje simple, directo y profesional.  \n- Siempre que aparezcan datos de contacto (teléfonos, mails, direcciones) incluílos en la respuesta.  \n- Si la consulta es ambigua, pedí que el cliente aclare.  \n\n**Objetivo**:  \nAyudar al cliente a entender rápidamente si puede devolver un producto, en qué plazo, bajo qué condiciones y a dónde debe dirigirse.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        -160
+      ],
+      "id": "f05f0b03-8c4c-4fd0-a623-1e8d24e50eda",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "38583a7e-e56e-46b6-9e8f-ee866afc8916",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Y0ZqothdFLkSs00M",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "98d7c15a-2a23-49a2-91b3-d8e9e5916dda",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        64,
+        -32
+      ],
+      "id": "33affce6-6ff6-4341-8b5a-12715eae368a",
+      "name": "Answer questions with a vector store"
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "demo-rag",
+          "mode": "list",
+          "cachedResultName": "demo-rag"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        112
+      ],
+      "id": "dc5c8fbb-bb65-4652-97bc-9d108c35110f",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "BpL8cyCBOjgFXPbn",
+          "name": "PineconeApi account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        112
+      ],
+      "id": "97a9968e-eafe-4668-910f-d28097f470d8",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "Y0ZqothdFLkSs00M",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -112,
+        240
+      ],
+      "id": "b0009ca2-47f2-4a99-9112-d6b90137924a",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "Y0ZqothdFLkSs00M",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## AGENTE RAG",
+        "height": 608,
+        "width": 1024,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "b1847bba-f448-460d-baad-775e8ff17ac9",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4acb6ad8-6dfc-4331-ac88-4bdc76a9dce4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b1af7223fb1a51e3e8780d1affb0751d38b4bea4c4e799d4a59c54c60ebfd8d"
+  },
+  "id": "9RfQi9hbh9MdyV5W",
+  "tags": []
+}
