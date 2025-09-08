@@ -6,7 +6,7 @@ El objetivo es recolectar información de productos de distintas categorías, ob
 
 ---
 
-## 🚀 Funcionalidad
+##  Funcionalidad
 
 El script:
 - Navega por distintas **categorías** de productos (ejemplo: heladeras, aires acondicionados, lavarropas, cocinas).
@@ -21,7 +21,7 @@ El script:
 
 ---
 
-## 🤔 ¿Por qué Selenium?
+##  ¿Por qué Selenium?
 
 Se utilizó **Selenium** porque el sitio de Frávega carga la mayoría de la información de los productos dinámicamente con **JavaScript**.  
 
@@ -34,7 +34,7 @@ Un parser de HTML estático (ej. BeautifulSoup solo) no alcanzaría en este caso
 
 ---
 
-## 📂 Salida
+##  Salida
 
 - `fravega_scrap_DD-MM-YYYY.xlsx` → archivo con los productos y precios recolectados.
 
@@ -50,7 +50,7 @@ Un parser de HTML estático (ej. BeautifulSoup solo) no alcanzaría en este caso
 
 ---
 
-## 📦 Requisitos
+##  Requisitos
 
 Instalar las dependencias:
 
