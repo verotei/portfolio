@@ -3,7 +3,7 @@
 Proyecto de **Retrieval Augmented Generation (RAG)** implementado en **n8n**.  
 En este caso uso como ejemplo un documento ficticio de **políticas de devolución de una empresa** para mostrar cómo transformarlo en un **sistema de consulta tipo chatbot**.  
 
-👉 Este proyecto complementa otro que realicé en **LangChain (Python)**, pero aquí muestro cómo armarlo con una herramienta **no-code**, acercando la misma lógica de RAG a un entorno más accesible y visual.  
+👉 Este proyecto complementa otro que realicé en **LangChain (Python)**, pero acá muestro cómo armarlo con una herramienta **no-code**, acercando la misma lógica de RAG a un entorno más accesible y visual.  
 
 El proyecto en Python también está disponible en mi portfolio y podés verlo en [**rag-proyecto**](./portfolio/projects/rag-proyecto).
 
