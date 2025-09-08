@@ -19,6 +19,10 @@ El script:
   - 📉 Descuento calculado
 - Genera un **archivo Excel** con todos los datos listos para análisis.
 
+##  Ejemplo de salida
+
+![Salida del scraping](projects/scraping_fravega/outputs/salida_scrap_fravega.jpg)
+
 ---
 
 ##  ¿Por qué Selenium?
