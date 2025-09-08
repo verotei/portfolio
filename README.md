@@ -1,6 +1,6 @@
 # Bienvenidos a mi portfolio de proyectos en datos 📊  
 
-Este repo está en construcción (work in progress). Prefiero publicar y mejorar que esperar lo perfecto.
+Este repo está en construcción 🚧 (work in progress). Publico, rompo y mejoro.
 
 ## Proyectos
 - [Scraping de precios](./projects/scraping_fravega)  
