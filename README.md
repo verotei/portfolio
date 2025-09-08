@@ -5,4 +5,13 @@ Este repo está en construcción (work in progress). Prefiero publicar y mejorar
 ## Proyectos
 - [Scraping de precios](./projects/scraping_fravega)  
 - [RAG con LangChain (Python)](./projects/rag-proyecto)  
-- [RAG con n8n (no-code)](./projects/n8n-rag-workflow)  
+- [RAG con n8n (no-code)](./projects/n8n-rag-workflow)
+
+
+## Próximamente
+- Análisis geográfico de precios con **Python**.  
+- Indicadores económicos con **Plotly**.  
+- Proyecto de análisis de datos con **Power Query y Power BI**.  
+- Dashboard interactivo con **Tableau**. 
+
+  
