@@ -5,6 +5,8 @@ En este caso uso como ejemplo un documento ficticio de **políticas de devoluci�
 
 👉 Este proyecto complementa otro que realicé en **LangChain (Python)**, pero aquí muestro cómo armarlo con una herramienta **no-code**, acercando la misma lógica de RAG a un entorno más accesible y visual.  
 
+El proyecto en Python también está disponible en mi portfolio y podés verlo en [**rag-proyecto**](./portfolio/projects/rag-proyecto).
+
 ---
 
 ## 🚀 Descripción
@@ -67,7 +69,7 @@ En **n8n** es necesario configurar:
 
 ## ▶️ Uso
 1. Colocar uno o varios documentos en la carpeta de Google Drive: **`demo-rag`**.  
-2. Ejecutar el Workflow**Input_rag**:  
+2. Ejecutar el Workflow **Input_rag**:  
    - Extrae todos los documentos desde Drive.  
    - Los procesa en chunks.  
    - Genera embeddings con OpenAI.  
