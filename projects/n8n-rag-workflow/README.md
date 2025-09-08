@@ -45,11 +45,13 @@ Este repositorio contiene dos workflows principales en **n8n**:
 ## 🛠️ Configuración
 
 ### 1. Crear índice en Pinecone
+
 1. Crear cuenta en [Pinecone](https://www.pinecone.io/).  
 2. Generar un nuevo índice (este proyecto usa: **`demo-rag`**).  
-   - **Dimension**: 1536 (compatible con `text-embedding-3-small`).  
-   - **Metric**: cosine.  
-   - **Pods**: 1 (unidad de cómputo; para demos es suficiente).  
+3. Seleccionar el modelo de embeddings de OpenAI:  
+   - Recomendado: **`text-embedding-3-small`** (suficiente y más económico).  
+4. Cambiar manualmente la **Dimension** a **1536** (aunque Pinecone sugiera 512 por defecto).  
+5. Aceptar la configuración para finalizar la creación del índice.  
 
 ### 2. Configurar credenciales en n8n
 En **n8n** es necesario configurar:  
