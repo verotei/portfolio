@@ -3,6 +3,6 @@
 Este repo está en construcción (work in progress). Prefiero publicar y mejorar que esperar lo perfecto.
 
 ## Proyectos
-- [Scraping de precios]()  
-- (Próximamente) Visualización de índices de precios
-- (Próximamente) Análisis geográfico de precios
+- [Scraping de precios](./projects/scraping-fravega)  
+- [RAG con LangChain (Python)](./projects/rag-proyecto)  
+- [RAG con n8n (no-code)](./projects/n8n-rag-workflow)  
