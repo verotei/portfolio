@@ -19,14 +19,14 @@ Este repositorio contiene dos workflows principales en **n8n**:
 2. **Agente de consultas (Agente RAG)**  
    - Recibe preguntas del usuario.  
    - Busca contexto en Pinecone.  
-   - Genera respuestas usando un modelo de OpenAI (ej: `gpt-4o-mini`), enriquecidas con la información del documento.
+   - Genera respuestas usando un modelo de OpenAI (ej: `gpt-4o`), enriquecidas con la información del documento.
 
 ---
 
 ## 📁 Contenido
 - `README.md` → Documentación principal del proyecto.  
 - `LICENSE` → Archivo con la licencia del proyecto.  
-- `workflows/` → JSON + screenshots de los dos workflows de n8n
+- `workflows/` → JSON + Diaframas de los dos workflows de n8n.
 - `docs/` → Documento de ejemplo (para subir a Drive).  
 - `outputs/` → Ejemplos de consultas y respuestas generadas.  
 
@@ -36,7 +36,7 @@ Este repositorio contiene dos workflows principales en **n8n**:
 - [n8n](https://n8n.io/) instalado (local o en la nube).  
 - API Key de **OpenAI** (para embeddings y respuestas).  
   - Es necesario contar con crédito en OpenAI.  
-  - El costo de este tipo de tareas es **muy bajo** (centavos de dólar por miles de tokens).  
+  - El costo de este tipo de tareas es **muy bajo**.  
 - API Key de **Pinecone** (para la base vectorial).  
 - Credenciales de **Google Drive** (para acceder a la carpeta `demo-rag`).  
 
@@ -58,14 +58,14 @@ En **n8n** es necesario configurar:
 - **Google Drive** → acceso a la carpeta `demo-rag` que contiene los documentos ficticios de políticas de devolución.  
 
 ### 3. Importar workflows
-- Importar el JSON de **carga de documentos** (ingesta).  
-- Importar el JSON del **agente de consultas**.  
+- Importar el JSON de **Imput_rag**.  
+- Importar el JSON del **Agente_rag**.  
 
 ---
 
 ## ▶️ Uso
 1. Colocar uno o varios documentos en la carpeta de Google Drive: **`demo-rag`**.  
-2. Ejecutar el **Input RAG Workflow**:  
+2. Ejecutar el Workflow**Input_rag**:  
    - Extrae todos los documentos desde Drive.  
    - Los procesa en chunks.  
    - Genera embeddings con OpenAI.  
@@ -79,7 +79,7 @@ En **n8n** es necesario configurar:
 
 ## 📌 Ejemplo de aplicación
 Este proyecto muestra cómo un RAG puede servir para:  
-- 🤝 Chatbots internos de RRHH o soporte.  
+- 🤝 Chatbots internos de soporte.  
 - 📚 Consultas rápidas a manuales, políticas o reglamentos.  
 - 🛒 Bots de atención al cliente en e-commerce.  
 
