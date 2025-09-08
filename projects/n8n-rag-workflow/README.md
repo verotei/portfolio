@@ -44,6 +44,14 @@ Este repositorio contiene dos workflows principales en **n8n**:
 
 ---
 
+## 🛠️ Tecnologías usadas
+- **n8n** → orquestación de workflows no-code  
+- **OpenAI** → embeddings y generación de respuestas  
+- **Pinecone** → base de datos vectorial  
+- **Google Drive** → almacenamiento de documentos de entrada  
+
+---
+
 ## 🛠️ Configuración
 
 ### 1. Crear índice en Pinecone
