@@ -1,7 +1,7 @@
 # 🚀 Retrieval Augmented Generation (RAG): validación inicial y potencial [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Este proyecto surge de lo aprendido en la materia **Minería de Textos** de la **Especialización en Inteligencia de Datos orientada a Big Data** (UNLP), con el profesor **Marcelo Errecalde**.  
-Ahí conocí en detalle los **Transformers**, una arquitectura que me voló la cabeza y me inspiró a armar este prototipo de RAG.
+Ahí conocí en detalle los **Transformers**, una arquitectura que me deslumbró y me inspiró a armar este prototipo de RAG.
 
 ---
 
