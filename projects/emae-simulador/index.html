@@ -818,3 +818,17 @@ function onSim(el) {
 }
 
 function resetSim() { simInputs = {}; render(); }
+
+
+
+
+
+
+const f1 = n => (n == null || isNaN(n)) ? '—' : n.toLocaleString('es-AR', { minimumFractionDigits:1, maximumFractionDigits:1 });
+const f2 = n => (n == null || isNaN(n)) ? '—' : n.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+
+populateSelectors();
+render();
+</script>
+</body>
+</html>
