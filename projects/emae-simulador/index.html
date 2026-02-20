@@ -30,7 +30,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 13.5px;
+  font-size: 18px;
   line-height: 1.5;
 }
 
@@ -671,7 +671,16 @@ function populateSelectors() {
   const años = [...new Set(Object.keys(DB).map(k => parseInt(k.split('-')[0])))].sort((a,b) => a-b);
   const selAño = document.getElementById('sel-año');
   años.forEach(a => selAño.innerHTML += `<option value="${a}">${a}</option>`);
-  const lastKey = Object.keys(DB).filter(k => DB[k][17] !== null).sort().at(-1);
+  const lastKey = Object.keys(DB)
+    .filter(k => DB[k][17] !== null)
+    .sort((a, b) => {
+      const [ay, am] = a.split('-');
+      const [by, bm] = b.split('-');
+      const yearDiff = parseInt(ay) - parseInt(by);
+      if (yearDiff !== 0) return yearDiff;
+      return MESES.indexOf(am) - MESES.indexOf(bm);
+    })
+    .at(-1);
   if (lastKey) {
     const [ay, am] = lastKey.split('-');
     selAño.value = ay;
@@ -795,6 +804,13 @@ function setKPI(id, val, suffix, barId) {
 function onSim(el) {
   const cod = el.dataset.cod;
   const raw = el.value.trim().replace(',', '.');
+  // Si el usuario está escribiendo (termina en punto/coma o está vacío), no recalcular todavía
+  if (raw === '' || raw === '-' || raw.endsWith('.')) {
+    delete simInputs[cod];
+    el.classList.remove('changed');
+    render();
+    return;
+  }
   const v = parseFloat(raw);
   if (!isNaN(v)) { simInputs[cod] = v; el.classList.add('changed'); }
   else           { delete simInputs[cod]; el.classList.remove('changed'); }
@@ -802,17 +818,3 @@ function onSim(el) {
 }
 
 function resetSim() { simInputs = {}; render(); }
-
-
-
-
-
-
-const f1 = n => (n == null || isNaN(n)) ? '—' : n.toLocaleString('es-AR', { minimumFractionDigits:1, maximumFractionDigits:1 });
-const f2 = n => (n == null || isNaN(n)) ? '—' : n.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
-
-populateSelectors();
-render();
-</script>
-</body>
-</html>
