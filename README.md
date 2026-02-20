@@ -6,7 +6,8 @@ Este repo está en construcción 🚧 (work in progress). Publico, rompo y mejor
 - [Scraping de precios](./projects/scraping_fravega)  
 - [RAG con LangChain (Python)](./projects/rag-proyecto)  
 - [RAG con n8n (no-code)](./projects/n8n-rag-workflow)
-- [Análisis de Reseñas: de Métodos Clásicos a Transformers](./projects/reviews-nlp-classic-vs-transformers) 📝  
+- [Análisis de Reseñas: de Métodos Clásicos a Transformers](./projects/reviews-nlp-classic-vs-transformers) 📝
+- [Simulador EMAE](./projects/emae-simulador)
 
 
 
