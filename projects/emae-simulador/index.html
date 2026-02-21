@@ -482,11 +482,14 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
 </div>
 
 <div class="footnote">
-  <strong>Metodología:</strong> Ponderador implícito = (idx<sub>sector, t‑12</sub> / idx<sub>EMAE, t‑12</sub>) × ponderación base 2004.
-  Impuestos netos de subsidios: variación propia del índice; en simulación se recalculan por el cambio en el VA agregado (sectores A–O).
-  Sector P — Hogares privados con servicio doméstico (pond. 0,63%) sin índice mensual; ponderación redistribuida proporcionalmente entre sectores A–O e Impuestos (×1,006312) para que los ponderadores sumen 100%.
-  Diferencia residual respecto al dato publicado es normal por encadenamiento de índices. |
-  <strong>Fuente:</strong> INDEC, EMAE base 2004=100. Elaboración propia.
+  <strong>Metodología:</strong> El simulador replica la estructura del EMAE base 2004=100 publicado por INDEC.
+  La incidencia de cada sector se calcula usando ponderadores implícitos obtenidos como
+  (idx<sub>sector, t‑12</sub> / idx<sub>EMAE, t‑12</sub>) × ponderación base 2004, multiplicados por la variación del sector en el período.
+  <strong>Casos especiales:</strong>
+  Impuestos netos de subsidios: en simulación se recalculan a partir del cambio en el valor agregado de los sectores A–O, no de una variación propia.
+  Sector P (Hogares privados con servicio doméstico, pond. 0,63%): no cuenta con índice mensual; su ponderación se redistribuye proporcionalmente entre los sectores A–O e Impuestos (×1,006312) para que los ponderadores sumen 100%.
+  La diferencia residual respecto al dato publicado por INDEC es normal dado el encadenamiento de índices. |
+  <strong>Fuente:</strong> INDEC, EMAE base 2004=100. Elaboración propia — Verónica Teilletchea · <a href="https://www.linkedin.com/in/verónica-teilletchea" target="_blank">LinkedIn</a>
 </div>
 
 <script>
