@@ -359,30 +359,32 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
 <div class="footnote">
   <strong>Metodología:</strong> Ponderador implícito = (idx<sub>sector, t‑12</sub> / idx<sub>EMAE, t‑12</sub>) × ponderación base 2004.
   Impuestos netos de subsidios: variación propia del índice; en simulación se recalculan por el cambio en el VA agregado (sectores A–O).
-  Sector P — Hogares privados con servicio doméstico (pond. 0,63%) excluido por falta de índice mensual.
-  Diferencia de ~0,03 pp respecto al dato publicado es normal por encadenamiento de índices. |
+  Sector P — Hogares privados con servicio doméstico (pond. 0,63%) sin índice mensual; ponderación redistribuida proporcionalmente entre sectores A–O e Impuestos (×1,006312) para que los ponderadores sumen 100%.
+  Diferencia residual respecto al dato publicado es normal por encadenamiento de índices. |
   <strong>Fuente:</strong> INDEC, EMAE base 2004=100. Elaboración propia.
 </div>
 
 <script>
+// Ponderadores ajustados proporcionalmente para incluir Sector P (0,63% del PIB 2004)
+// que no tiene índice mensual. Factor de ajuste: 1/0.993727576 ≈ 1.006312
 const SECTORES = [
-  { cod:'A', nombre:'Agricultura, ganadería, caza y silvicultura',           pond: 0.080651355 },
-  { cod:'B', nombre:'Pesca',                                                  pond: 0.002973511 },
-  { cod:'C', nombre:'Explotación de minas y canteras',                        pond: 0.050136145 },
-  { cod:'D', nombre:'Industria manufacturera',                                 pond: 0.189370136 },
-  { cod:'E', nombre:'Electricidad, gas y agua',                               pond: 0.017938844 },
-  { cod:'F', nombre:'Construcción',                                            pond: 0.030724095 },
-  { cod:'G', nombre:'Comercio mayorista, minorista y reparaciones',            pond: 0.123753278 },
-  { cod:'H', nombre:'Hoteles y restaurantes',                                  pond: 0.014297706 },
-  { cod:'I', nombre:'Transporte y comunicaciones',                             pond: 0.061407889 },
-  { cod:'J', nombre:'Intermediación financiera',                               pond: 0.031084181 },
-  { cod:'K', nombre:'Actividades inmobiliarias, empresariales y de alquiler', pond: 0.10942631  },
-  { cod:'L', nombre:'Administración pública y defensa',                        pond: 0.044494699 },
-  { cod:'M', nombre:'Enseñanza',                                               pond: 0.035161543 },
-  { cod:'N', nombre:'Servicios sociales y de salud',                          pond: 0.027212822 },
-  { cod:'O', nombre:'Otras actividades de servicios comunitarios',            pond: 0.02525903  },
+  { cod:'A', nombre:'Agricultura, ganadería, caza y silvicultura',           pond: 0.0811604276 },
+  { cod:'B', nombre:'Pesca',                                                  pond: 0.0029922798 },
+  { cod:'C', nombre:'Explotación de minas y canteras',                        pond: 0.0504526051 },
+  { cod:'D', nombre:'Industria manufacturera',                                 pond: 0.1905654433 },
+  { cod:'E', nombre:'Electricidad, gas y agua',                               pond: 0.0180520743 },
+  { cod:'F', nombre:'Construcción',                                            pond: 0.0309180260 },
+  { cod:'G', nombre:'Comercio mayorista, minorista y reparaciones',            pond: 0.1245344106 },
+  { cod:'H', nombre:'Hoteles y restaurantes',                                  pond: 0.0143879533 },
+  { cod:'I', nombre:'Transporte y comunicaciones',                             pond: 0.0617954966 },
+  { cod:'J', nombre:'Intermediación financiera',                               pond: 0.0312803848 },
+  { cod:'K', nombre:'Actividades inmobiliarias, empresariales y de alquiler', pond: 0.1101170106 },
+  { cod:'L', nombre:'Administración pública y defensa',                        pond: 0.0447755502 },
+  { cod:'M', nombre:'Enseñanza',                                               pond: 0.0353834832 },
+  { cod:'N', nombre:'Servicios sociales y de salud',                          pond: 0.0273845898 },
+  { cod:'O', nombre:'Otras actividades de servicios comunitarios',            pond: 0.0254184654 },
 ];
-const POND_IMP = 0.149836032;
+const POND_IMP = 0.1507817994;
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
@@ -737,9 +739,9 @@ function render() {
       <td class="num ${varReal >= 0 ? 'pos' : 'neg'}">${f1(varReal)}%</td>
       <td class="num ${incidR  >= 0 ? 'pos' : 'neg'}">${f2(incidR)}</td>
       <td class="cell-sim"><input class="sim-input${changed ? ' changed' : ''}"
-           data-cod="${s.cod}" value="${f1(simVal).replace(',','.')}"
+           data-cod="${s.cod}" value="${f1(simVal)}"
            type="text" inputmode="decimal"
-           onchange="onSim(this)" onkeyup="onSim(this)"></td>
+           onfocus="onFocus(this)" onblur="onBlur(this)" onkeydown="onKeyDown(this, event)"></td>
       <td class="num cell-result ${incidS >= 0 ? 'pos' : 'neg'}">${f2(incidS)}</td>
       <td class="num ${delta > 0.005 ? 'pos' : delta < -0.005 ? 'neg' : 'dim'}">${delta >= 0 ? '+' : ''}${f2(delta)}</td>
     `;
@@ -801,16 +803,53 @@ function setKPI(id, val, suffix, barId) {
   if (barId) document.getElementById(barId).style.background = val > 0 ? 'var(--pos)' : val < 0 ? 'var(--neg)' : 'var(--border)';
 }
 
+// Enter navega a la celda de abajo
+function onKeyDown(el, e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    // Guardar índice ANTES de render (que destruye el DOM)
+    const inputs = Array.from(document.querySelectorAll('input.sim-input'));
+    const idx = inputs.indexOf(el);
+    onBlur(el); // guarda y llama render() -> destruye inputs
+    // Después de render, buscar el input en la misma posición
+    const newInputs = Array.from(document.querySelectorAll('input.sim-input'));
+    if (idx >= 0 && idx < newInputs.length - 1) {
+      newInputs[idx + 1].focus();
+    }
+  }
+}
+
+// Al hacer foco: limpiar formato para edición libre con coma o punto
+function onFocus(el) {
+  const cod = el.dataset.cod;
+  const v = simInputs[cod];
+  if (v !== undefined) {
+    // Mostrar con coma para edición natural
+    el.value = String(v).replace('.', ',');
+  }
+  el.select();
+}
+
+// Al salir del input: reformatear con coma y recalcular
+function onBlur(el) {
+  const cod = el.dataset.cod;
+  const raw = el.value.trim().replace(',', '.');
+  const v = parseFloat(raw);
+  if (!isNaN(v)) {
+    simInputs[cod] = v;
+    el.classList.add('changed');
+  } else {
+    delete simInputs[cod];
+    el.classList.remove('changed');
+  }
+  render();
+}
+
 function onSim(el) {
   const cod = el.dataset.cod;
   const raw = el.value.trim().replace(',', '.');
-  // Si el usuario está escribiendo (termina en punto/coma o está vacío), no recalcular todavía
-  if (raw === '' || raw === '-' || raw.endsWith('.')) {
-    delete simInputs[cod];
-    el.classList.remove('changed');
-    render();
-    return;
-  }
+  // Mientras escribe: no recalcular si está incompleto
+  if (raw === '' || raw === '-' || raw.endsWith('.') || raw.endsWith(',')) return;
   const v = parseFloat(raw);
   if (!isNaN(v)) { simInputs[cod] = v; el.classList.add('changed'); }
   else           { delete simInputs[cod]; el.classList.remove('changed'); }
