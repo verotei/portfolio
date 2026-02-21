@@ -295,6 +295,70 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
   .table-section, .footnote { padding-left: 16px; padding-right: 16px; }
   .footnote { margin-left: 16px; margin-right: 16px; }
 }
+
+/* ── Top incidencias ───────────────────────────────── */
+
+
+
+
+.top-badge {
+  display: inline-block;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: 5px;
+  vertical-align: middle;
+  letter-spacing: 0.05em;
+}
+.top-badge-pos { background: #bbf7d0; color: #15803d; }
+.top-badge-neg { background: #fed7aa; color: #c2410c; }
+
+/* ── Tabs/* ── Tabs ──────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 32px;
+}
+.tab-btn {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+.tab-btn:hover { background: var(--border); color: var(--text); }
+.tab-btn.active { 
+  background: var(--text); 
+  color: #fff; 
+  border-color: var(--text);
+}
+
+/* ── Proyección ─────────────────────────────────────── */
+.proy-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7c3aed;
+  background: #ede9fe;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.col-proy-header { background: #ede9fe !important; color: #7c3aed !important; }
+.cell-proy { background: #ede9fe; }
+.kpi-proy .kpi-value { color: #7c3aed; }
 </style>
 </head>
 <body>
@@ -305,13 +369,22 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
     <p>Simulá el impacto sectorial en la actividad económica</p>
   </div>
   <div class="header-right">
-    <div class="ctrl-group">
+    <div class="ctrl-group" id="ctrl-periodo">
       <span class="ctrl-label">Período</span>
       <select id="sel-año"></select>
       <select id="sel-mes"></select>
     </div>
-    <button class="btn btn-outline" onclick="resetSim()">↺ Resetear</button>
+    <div class="ctrl-group" id="ctrl-proy" style="display:none">
+      <span class="ctrl-label">Proyectar</span>
+      <select id="sel-proy-mes"></select>
+    </div>
+    <button class="btn btn-outline" id="btn-reset-proy" onclick="resetProy()" style="display:none">↺ Resetear</button>
+    <button class="btn btn-outline" id="btn-reset" onclick="resetSim()">↺ Resetear</button>
   </div>
+</div>
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('analisis')">Análisis</button>
+  <button class="tab-btn" onclick="switchTab('proyeccion')">Proyección</button>
 </div>
 
 <div class="kpi-strip">
@@ -335,6 +408,28 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
   </div>
 </div>
 
+<!-- KPIs Proyección -->
+<div class="kpi-strip" id="kpi-proy" style="display:none">
+  <div class="kpi-card kpi-proy">
+    <div class="kpi-label">EMAE proyectado</div>
+    <div class="kpi-value" id="kv-proy" style="color:#7c3aed">—</div>
+    <div class="kpi-sub">Variación interanual proyectada</div>
+    <div class="kpi-bar" id="bar-proy" style="background:#7c3aed"></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Último dato disponible</div>
+    <div class="kpi-value val-neutral" id="kv-ultimo">—</div>
+    <div class="kpi-sub" id="kv-ultimo-sub">—</div>
+    <div class="kpi-bar" id="bar-ultimo"></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Sectores con supuesto</div>
+    <div class="kpi-value val-neutral" id="kv-nsectores">0 / 15</div>
+    <div class="kpi-sub">Ingresá variaciones para proyectar</div>
+    <div class="kpi-bar"></div>
+  </div>
+</div>
+
 <div class="table-section">
   <div class="table-header">
     <div class="table-title">Variaciones e incidencias sectoriales</div>
@@ -353,6 +448,36 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
     </thead>
     <tbody id="tbody"></tbody>
     <tfoot id="tfoot"></tfoot>
+  </table>
+</div>
+
+<!-- Tabla Proyección -->
+<div class="table-section" id="table-proy" style="display:none">
+  <div class="table-header">
+    <div class="table-title">Proyección sectorial</div>
+    <div class="table-subtitle">Ingresá cualquiera de los tres valores — los otros dos se calculan solos</div>
+  </div>
+  <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:6px;padding:12px 16px;margin-bottom:14px;font-size:0.75rem;color:#5b21b6;line-height:1.8">
+    <strong>¿Cómo usar?</strong><br>
+    • <strong>Idx proy.</strong>: ingresá el nivel del índice que esperás para este mes<br>
+    • <strong>Var. i/a %</strong>: variación respecto al mismo mes del año anterior (como publica INDEC)<br>
+    • <strong>Var. mens. %</strong>: variación respecto al mes anterior (t‑1)<br>
+    Escribí en cualquier campo y los otros dos se actualizan automáticamente. Usá Enter para bajar de fila.
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;min-width:180px">Sector</th>
+        <th>t‑12</th>
+        <th>t‑1</th>
+        <th class="col-proy-header">Idx proy.</th>
+        <th class="col-proy-header">Var. i/a %</th>
+        <th class="col-proy-header">Var. mens. %</th>
+        <th class="col-result-header">Incid. pp</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-proy"></tbody>
+    <tfoot id="tfoot-proy"></tfoot>
   </table>
 </div>
 
@@ -752,9 +877,12 @@ function render() {
   const pondImplImp = (vP[16] / emae_ref) * POND_IMP;
   const varImpReal  = (vC[16] / vP[16] - 1) * 100;
   const incidImpR   = varImpReal / 100 * pondImplImp * 100;
-  const deltaVApp   = sumIncidSim - sumIncidReal;
-  const varImpSim   = varImpReal + deltaVApp;
+  // Impuestos siguen proporcionalmente al VA simulado
+  // Si sumIncidReal=0 usamos varImpReal para evitar división por cero
+  const ratioSim    = sumIncidReal !== 0 ? sumIncidSim / sumIncidReal : 1;
+  const varImpSim   = varImpReal * ratioSim;
   const incidImpS   = varImpSim / 100 * pondImplImp * 100;
+  const deltaVApp   = sumIncidSim - sumIncidReal;
   const deltaImp    = incidImpS - incidImpR;
 
   sumIncidReal += incidImpR;
@@ -794,6 +922,7 @@ function render() {
   elDiff.textContent = `${diff >= 0 ? '+' : ''}${f2(diff)} pp`;
   elDiff.className = `kpi-value ${diff > 0.05 ? 'val-pos' : diff < -0.05 ? 'val-neg' : 'val-neutral'}`;
   document.getElementById('bar-diff').style.background = diff > 0.05 ? 'var(--pos)' : diff < -0.05 ? 'var(--neg)' : 'var(--border)';
+  highlightTop('tbody');
 }
 
 function setKPI(id, val, suffix, barId) {
@@ -856,17 +985,303 @@ function onSim(el) {
   render();
 }
 
+function highlightTop(tbodyId) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  const rows = Array.from(tbody.querySelectorAll('tr:not(.imp-row)'));
+
+  // Limpiar clases previas y badges
+  rows.forEach(tr => {
+    tr.classList.remove('top-pos', 'top-neg');
+    tr.querySelectorAll('.top-badge').forEach(b => b.remove());
+  });
+
+  // Determinar qué columna de incidencia usar
+  // En análisis: col 2 (incid real) y col 4 (incid sim)
+  // En proyección: última columna
+  const isAnalisis = tbodyId === 'tbody';
+  
+  const getIncid = (tr) => {
+    const cells = tr.querySelectorAll('td');
+    // Buscar celda con clase cell-result
+    for (const td of cells) {
+      if (td.classList.contains('cell-result')) {
+        const txt = td.textContent.trim().replace(',', '.');
+        return parseFloat(txt);
+      }
+    }
+    return NaN;
+  };
+
+  const rowsWithVal = rows
+    .map(tr => ({ tr, val: getIncid(tr) }))
+    .filter(r => !isNaN(r.val));
+
+  const sorted = [...rowsWithVal].sort((a, b) => b.val - a.val);
+  const top3pos = sorted.slice(0, 3).filter(r => r.val > 0);
+  const top3neg = sorted.slice(-3).reverse().filter(r => r.val < 0);
+
+  top3pos.forEach((r, i) => {
+    r.tr.classList.add('top-pos');
+    const td = r.tr.querySelector('td:first-child');
+    if (td) td.innerHTML += `<span class="top-badge top-badge-pos">+${i+1}</span>`;
+  });
+  top3neg.forEach((r, i) => {
+    r.tr.classList.add('top-neg');
+    const td = r.tr.querySelector('td:first-child');
+    if (td) td.innerHTML += `<span class="top-badge top-badge-neg">−${i+1}</span>`;
+  });
+}
+
 function resetSim() { simInputs = {}; render(); }
+function resetProy() { proyInputs = {}; renderProy(); }
 
 
 
 
 
+
+// ── Tabs ────────────────────────────────────────────
+let currentTab = 'analisis';
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'analisis') || (i === 1 && tab === 'proyeccion'));
+  });
+
+  const isAnalisis = tab === 'analisis';
+  document.getElementById('ctrl-periodo').style.display = isAnalisis ? '' : 'none';
+  document.getElementById('ctrl-proy').style.display    = isAnalisis ? 'none' : '';
+  document.getElementById('btn-reset').style.display       = isAnalisis ? '' : 'none';
+  document.getElementById('btn-reset-proy').style.display  = isAnalisis ? 'none' : '';
+
+  document.querySelector('.kpi-strip').style.display    = isAnalisis ? '' : 'none';
+  document.getElementById('kpi-proy').style.display     = isAnalisis ? 'none' : '';
+  document.querySelector('.table-section').style.display = isAnalisis ? '' : 'none';
+  document.getElementById('table-proy').style.display   = isAnalisis ? 'none' : '';
+
+  if (tab === 'proyeccion') renderProy();
+}
+
+// ── Proyección ───────────────────────────────────────
+let proyInputs = {};
+
+function getNextPeriod() {
+  // Encontrar el último período publicado
+  const lastKey = Object.keys(DB)
+    .filter(k => DB[k][17] !== null)
+    .sort((a, b) => {
+      const [ay, am] = a.split('-');
+      const [by, bm] = b.split('-');
+      const yd = parseInt(ay) - parseInt(by);
+      if (yd !== 0) return yd;
+      return MESES.indexOf(am) - MESES.indexOf(bm);
+    })
+    .at(-1);
+
+  if (!lastKey) return null;
+  const [ay, am] = lastKey.split('-');
+  const mesIdx = MESES.indexOf(am);
+  const nextMesIdx = (mesIdx + 1) % 12;
+  const nextAño = mesIdx === 11 ? parseInt(ay) + 1 : parseInt(ay);
+  return { año: nextAño, mes: MESES[nextMesIdx], baseKey: lastKey };
+}
+
+function populateProy() {
+  const sel = document.getElementById('sel-proy-mes');
+  sel.innerHTML = '';
+  const next = getNextPeriod();
+  if (next) {
+    sel.innerHTML = `<option value="${next.año}-${next.mes}">${next.mes} ${next.año}</option>`;
+  }
+  sel.addEventListener('change', renderProy);
+}
+
+function renderProy() {
+  const next = getNextPeriod();
+  if (!next) return;
+
+  const { año, mes } = next;
+  const vBase = DB[`${año - 1}-${mes}`]; // índices del mismo mes del año anterior
+  if (!vBase) return;
+
+  const emae_ref = vBase[17];
+  const tbody = document.getElementById('tbody-proy');
+  tbody.innerHTML = '';
+  let sumIncidProy = 0;
+  let nSectores = 0;
+
+  // Índice t-1: mes anterior al que se proyecta
+  const mesIdx = MESES.indexOf(mes);
+  const prevMesIdx = (mesIdx - 1 + 12) % 12;
+  const prevAño = mesIdx === 0 ? año - 1 : año;
+  const vPrev = DB[`${prevAño}-${MESES[prevMesIdx]}`];
+
+  SECTORES.forEach((s, i) => {
+    const idxBase = vBase[i];
+    if (!idxBase) return;
+
+    const pondImpl = (idxBase / emae_ref) * s.pond;
+    const varProy  = proyInputs[s.cod] !== undefined ? proyInputs[s.cod] : null;
+    const incidP   = varProy !== null ? varProy / 100 * pondImpl * 100 : 0;
+    if (varProy !== null) { sumIncidProy += incidP; nSectores++; }
+
+    const idxPrev = vPrev ? vPrev[i] : null;
+    const changed = proyInputs[s.cod] !== undefined;
+    const idxProy = varProy !== null ? idxBase * (1 + varProy / 100) : null;
+    const varMens = (idxProy !== null && idxPrev !== null) ? (idxProy / idxPrev - 1) * 100 : null;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="cod">${s.cod}</span>${s.nombre}</td>
+      <td class="num">${f2(idxBase)}</td>
+      <td class="num">${idxPrev !== null ? f2(idxPrev) : '—'}</td>
+      <td class="cell-proy"><input class="sim-input${changed ? ' changed' : ''}"
+           style="border-color:${changed ? '#7c3aed' : ''};background:${changed ? '#f5f3ff' : ''}"
+           data-cod="${s.cod}" data-base="${idxBase}" data-prev="${idxPrev || ''}" data-type="idx"
+           value="${idxProy !== null ? f2(idxProy) : ''}"
+           type="text" inputmode="decimal" placeholder="—"
+           onfocus="onFocusProy(this)" onblur="onBlurProy(this)" onkeydown="onKeyDownProy(this, event)"></td>
+      <td class="cell-proy"><input class="sim-input${changed ? ' changed' : ''}"
+           style="border-color:${changed ? '#7c3aed' : ''};background:${changed ? '#f5f3ff' : ''}"
+           data-cod="${s.cod}" data-base="${idxBase}" data-prev="${idxPrev || ''}" data-type="var"
+           value="${varProy !== null ? f1(varProy) : ''}"
+           type="text" inputmode="decimal" placeholder="—"
+           onfocus="onFocusProy(this)" onblur="onBlurProy(this)" onkeydown="onKeyDownProy(this, event)"></td>
+      <td class="cell-proy"><input class="sim-input${changed ? ' changed' : ''}"
+           style="border-color:${changed ? '#7c3aed' : ''};background:${changed ? '#f5f3ff' : ''}"
+           data-cod="${s.cod}" data-base="${idxBase}" data-prev="${idxPrev || ''}" data-type="mens"
+           value="${varMens !== null ? f1(varMens) : ''}"
+           type="text" inputmode="decimal" placeholder="—"
+           onfocus="onFocusProy(this)" onblur="onBlurProy(this)" onkeydown="onKeyDownProy(this, event)"></td>
+      <td class="num cell-result ${incidP >= 0 ? 'pos' : 'neg'}">${varProy !== null ? f2(incidP) : '—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Impuestos proyectados (proporcional al VA proyectado)
+  const pondImplImp = (vBase[16] / emae_ref) * POND_IMP;
+  const varImpBase  = 0; // no tenemos dato real, dejamos neutro
+  // Usamos ratio de VA proyectado vs base si hay suficientes sectores
+  const incidImpP = sumIncidProy !== 0 ? sumIncidProy * (pondImplImp / (1 - pondImplImp)) : 0;
+
+  const trImp = document.createElement('tr');
+  trImp.className = 'imp-row';
+  trImp.innerHTML = `
+    <td><span class="cod-imp">IMP</span>Impuestos netos de subsidios</td>
+    <td class="num">${f2(vBase[16])}</td>
+    <td class="num">${vPrev && vPrev[16] ? f2(vPrev[16]) : '—'}</td>
+    <td class="imp-note cell-proy" colspan="3">↳ sigue VA proyectado</td>
+    <td class="num cell-result ${incidImpP >= 0 ? 'pos' : 'neg'}">${nSectores > 0 ? f2(incidImpP) : '—'}</td>
+  `;
+  tbody.appendChild(trImp);
+
+  const totalProy = sumIncidProy + (nSectores > 0 ? incidImpP : 0);
+
+  const emae_prev = vPrev ? vPrev[17] : null;
+  document.getElementById('tfoot-proy').innerHTML = `
+    <tr>
+      <td>EMAE proyectado ${mes} ${año}</td>
+      <td class="num" style="text-align:right">${f2(emae_ref)}</td>
+      <td class="num" style="text-align:right">${emae_prev ? f2(emae_prev) : '—'}</td>
+      <td class="cell-proy" colspan="3"></td>
+      <td class="num cell-result ${totalProy >= 0 ? 'pos' : 'neg'}" style="text-align:right">${nSectores > 0 ? f2(totalProy) + ' pp' : '—'}</td>
+    </tr>
+  `;
+
+  // KPIs
+  const elProy = document.getElementById('kv-proy');
+  elProy.textContent = nSectores > 0 ? `${totalProy >= 0 ? '+' : ''}${f2(totalProy)}%` : '—';
+  elProy.style.color = totalProy > 0 ? 'var(--pos)' : totalProy < 0 ? 'var(--neg)' : '#7c3aed';
+
+  // Último dato
+  const lastKey = Object.keys(DB).filter(k => DB[k][17] !== null)
+    .sort((a,b) => { const [ay,am]=a.split('-'); const [by,bm]=b.split('-'); const yd=parseInt(ay)-parseInt(by); return yd!==0?yd:MESES.indexOf(am)-MESES.indexOf(bm); }).at(-1);
+  if (lastKey) {
+    const [ly, lm] = lastKey.split('-');
+    const vL = DB[lastKey];
+    const vLP = DB[`${parseInt(ly)-1}-${lm}`];
+    const varUlt = vLP ? (vL[17]/vLP[17]-1)*100 : null;
+    document.getElementById('kv-ultimo').textContent = varUlt !== null ? `${f1(varUlt)}%` : '—';
+    document.getElementById('kv-ultimo-sub').textContent = `${lm} ${ly} (último publicado)`;
+    setKPI('kv-ultimo', varUlt, '%', 'bar-ultimo');
+  }
+
+  document.getElementById('kv-nsectores').textContent = `${nSectores} / 15`;
+  highlightTop('tbody-proy');
+}
+
+function onFocusProy(el) {
+  const cod = el.dataset.cod;
+  const tipo = el.dataset.type;
+  const base = parseFloat(el.dataset.base);
+  const prev = parseFloat(el.dataset.prev);
+  const v = proyInputs[cod]; // siempre guardado como interanual
+  if (v !== undefined) {
+    if (tipo === 'idx') {
+      const idx = base * (1 + v / 100);
+      el.value = String(idx.toFixed(2)).replace('.', ',');
+    } else if (tipo === 'var') {
+      el.value = String(v.toFixed(1)).replace('.', ',');
+    } else if (tipo === 'mens') {
+      if (!isNaN(prev)) {
+        const idx = base * (1 + v / 100);
+        const mens = (idx / prev - 1) * 100;
+        el.value = String(mens.toFixed(1)).replace('.', ',');
+      }
+    }
+  } else {
+    el.value = '';
+  }
+  el.select();
+}
+
+function onBlurProy(el) {
+  const cod = el.dataset.cod;
+  const tipo = el.dataset.type;
+  const base = parseFloat(el.dataset.base);
+  const prev = parseFloat(el.dataset.prev);
+  const raw = el.value.trim().replace(',', '.');
+  const v = parseFloat(raw);
+
+  if (!isNaN(v)) {
+    if (tipo === 'idx') {
+      // Índice proyectado → interanual
+      proyInputs[cod] = (v / base - 1) * 100;
+    } else if (tipo === 'var') {
+      // Variación interanual directa
+      proyInputs[cod] = v;
+    } else if (tipo === 'mens') {
+      // Variación mensual → calcular índice → calcular interanual
+      if (!isNaN(prev)) {
+        const idxProy = prev * (1 + v / 100);
+        proyInputs[cod] = (idxProy / base - 1) * 100;
+      }
+    }
+  } else {
+    delete proyInputs[cod];
+  }
+  renderProy();
+}
+
+function onKeyDownProy(el, e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    // Navegar al input del mismo tipo en la fila siguiente
+    const tipo = el.dataset.type;
+    const inputs = Array.from(document.querySelectorAll(`#tbody-proy input[data-type="${tipo}"]`));
+    const idx = inputs.indexOf(el);
+    onBlurProy(el);
+    const newInputs = Array.from(document.querySelectorAll(`#tbody-proy input[data-type="${tipo}"]`));
+    if (idx >= 0 && idx < newInputs.length - 1) newInputs[idx + 1].focus();
+  }
+}
 
 const f1 = n => (n == null || isNaN(n)) ? '—' : n.toLocaleString('es-AR', { minimumFractionDigits:1, maximumFractionDigits:1 });
 const f2 = n => (n == null || isNaN(n)) ? '—' : n.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
 
 populateSelectors();
+populateProy();
 render();
 </script>
 </body>
