@@ -16,9 +16,14 @@ Permite proyectar el EMAE del mes siguiente al último dato disponible. Para cad
 Cualquiera de los tres campos se puede completar y los otros dos se calculan automáticamente.
 
 ## Metodología
-- Ponderador implícito = (idx_sector_t12 / idx_EMAE_t12) × ponderación base 2004
-- Impuestos netos de subsidios: variación propia en Análisis; proporcional al VA proyectado en Proyección
-- Sector P (Hogares con servicio doméstico, 0,63%) sin índice mensual: ponderación redistribuida proporcionalmente entre sectores A–O e Impuestos (factor ×1,006312) para que los ponderadores sumen 100%
+
+-La incidencia de cada sector se calcula usando ponderadores implícitos obtenidos como (idx_sector,t‑12 / idx_EMAE,t‑12) × ponderación base 2004, multiplicados por la variación del sector en el período.
+
+Tratamiento de casos especiales:
+
+-Impuestos netos de subsidios: en simulación se recalculan a partir del cambio en el valor agregado de los sectores A–O, no de una variación propia. -Sector P (Hogares privados con servicio doméstico, pond. 0,63%): no cuenta con índice mensual; su ponderación se redistribuye proporcionalmente entre los sectores A–O e Impuestos (×1,006312) para que los ponderadores sumen 100%.
+
+-La diferencia residual respecto al dato publicado por INDEC es normal dado el encadenamiento de índices.
 
 ## Fuente de datos
 INDEC — EMAE base 2004=100. Elaboración propia.
