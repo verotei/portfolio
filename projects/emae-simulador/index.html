@@ -503,7 +503,7 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
   La incidencia de cada sector se calcula usando ponderadores implícitos obtenidos como
   (idx<sub>sector, t‑12</sub> / idx<sub>EMAE, t‑12</sub>) × ponderación base 2004, multiplicados por la variación del sector en el período.
   <strong>Casos especiales:</strong>
-  Impuestos netos de subsidios: en simulación se recalculan a partir del cambio en el valor agregado de los sectores A–O, no de una variación propia.
+  Impuestos netos de subsidios: se simulan como un sector más, ingresando una variación interanual propia. Por defecto toman su variación real observada.
   Sector P (Hogares privados con servicio doméstico, pond. 0,63%): no cuenta con índice mensual; su ponderación se redistribuye proporcionalmente entre los sectores A–O e Impuestos (×1,006312) para que los ponderadores sumen 100%.
   Estos tratamientos, junto con el encadenamiento de índices, explican la diferencia residual que puede observarse respecto al dato publicado por INDEC. |
   <strong>Fuente:</strong> INDEC, EMAE base 2004=100. Elaboración propia — Verónica Teilletchea · <a href="https://www.linkedin.com/in/verónica-teilletchea" target="_blank">LinkedIn</a>
@@ -893,28 +893,27 @@ function render() {
     tbody.appendChild(tr);
   });
 
-  // Impuestos
+  // Impuestos: editable igual que los sectores A-O
   const pondImplImp = (vP[16] / emae_ref) * POND_IMP;
   const varImpReal  = (vC[16] / vP[16] - 1) * 100;
   const incidImpR   = varImpReal / 100 * pondImplImp * 100;
-  // Impuestos siguen proporcionalmente al VA simulado
-  // Si sumIncidReal=0 usamos varImpReal para evitar división por cero
-  const ratioSim    = sumIncidReal !== 0 ? sumIncidSim / sumIncidReal : 1;
-  const varImpSim   = varImpReal * ratioSim;
-  const incidImpS   = varImpSim / 100 * pondImplImp * 100;
-  const deltaVApp   = sumIncidSim - sumIncidReal;
+  const simImpVal   = simInputs['IMP'] !== undefined ? simInputs['IMP'] : varImpReal;
+  const incidImpS   = simImpVal / 100 * pondImplImp * 100;
   const deltaImp    = incidImpS - incidImpR;
+  const changedImp  = simInputs['IMP'] !== undefined;
 
   sumIncidReal += incidImpR;
   sumIncidSim  += incidImpS;
 
   const trImp = document.createElement('tr');
-  trImp.className = 'imp-row';
   trImp.innerHTML = `
     <td><span class="cod-imp">IMP</span>Impuestos netos de subsidios</td>
     <td class="num ${varImpReal >= 0 ? 'pos' : 'neg'}">${f1(varImpReal)}%</td>
     <td class="num ${incidImpR  >= 0 ? 'pos' : 'neg'}">${f2(incidImpR)}</td>
-    <td class="imp-note cell-sim">↳ sigue VA simulado</td>
+    <td class="cell-sim"><input class="sim-input${changedImp ? ' changed' : ''}"
+         data-cod="IMP" value="${f1(simImpVal)}"
+         type="text" inputmode="decimal"
+         onfocus="onFocus(this)" onblur="onBlur(this)" onkeydown="onKeyDown(this, event)"></td>
     <td class="num cell-result ${incidImpS >= 0 ? 'pos' : 'neg'}">${f2(incidImpS)}</td>
     <td class="num ${deltaImp > 0.005 ? 'pos' : deltaImp < -0.005 ? 'neg' : 'dim'}">${deltaImp >= 0 ? '+' : ''}${f2(deltaImp)}</td>
   `;
@@ -922,7 +921,7 @@ function render() {
 
   // Total
   const varTotalReal = (vC[17] / vP[17] - 1) * 100;
-  const diff = sumIncidSim - sumIncidReal;
+  const diffTotal = sumIncidSim - sumIncidReal;
 
   document.getElementById('tfoot').innerHTML = `
     <tr>
@@ -931,17 +930,21 @@ function render() {
       <td class="num ${sumIncidReal >= 0 ? 'pos' : 'neg'}" style="text-align:right">${f2(sumIncidReal)} pp</td>
       <td class="cell-sim"></td>
       <td class="num cell-result ${sumIncidSim >= 0 ? 'pos' : 'neg'}" style="text-align:right">${f2(sumIncidSim)} pp</td>
-      <td class="num ${diff > 0.01 ? 'pos' : diff < -0.01 ? 'neg' : 'dim'}" style="text-align:right">${diff >= 0 ? '+' : ''}${f2(diff)}</td>
+      <td class="num ${diffTotal > 0.01 ? 'pos' : diffTotal < -0.01 ? 'neg' : 'dim'}" style="text-align:right">${diffTotal >= 0 ? '+' : ''}${f2(diffTotal)}</td>
     </tr>
   `;
 
   // KPIs
+  // Si no hay cambios, anclar variación simulada al dato real (evita residuo de aproximación)
+  const hayCambios  = Object.keys(simInputs).length > 0;
+  const varSimulada = hayCambios ? sumIncidSim : varTotalReal;
+  const diffFinal   = hayCambios ? sumIncidSim - sumIncidReal : 0;
   setKPI('kv-real', varTotalReal, '%', 'bar-real');
-  setKPI('kv-sim',  sumIncidSim,  '%', 'bar-sim');
+  setKPI('kv-sim',  varSimulada,  '%', 'bar-sim');
   const elDiff = document.getElementById('kv-diff');
-  elDiff.textContent = `${diff >= 0 ? '+' : ''}${f2(diff)} pp`;
-  elDiff.className = `kpi-value ${diff > 0.05 ? 'val-pos' : diff < -0.05 ? 'val-neg' : 'val-neutral'}`;
-  document.getElementById('bar-diff').style.background = diff > 0.05 ? 'var(--pos)' : diff < -0.05 ? 'var(--neg)' : 'var(--border)';
+  elDiff.textContent = `${diffFinal >= 0 ? '+' : ''}${f2(diffFinal)} pp`;
+  elDiff.className = `kpi-value ${diffFinal > 0.05 ? 'val-pos' : diffFinal < -0.05 ? 'val-neg' : 'val-neutral'}`;
+  document.getElementById('bar-diff').style.background = diffFinal > 0.05 ? 'var(--pos)' : diffFinal < -0.05 ? 'var(--neg)' : 'var(--border)';
   highlightTop('tbody');
 }
 
@@ -1179,24 +1182,45 @@ function renderProy() {
     tbody.appendChild(tr);
   });
 
-  // Impuestos proyectados (proporcional al VA proyectado)
+  // Impuestos proyectados: editable igual que los sectores A-O
   const pondImplImp = (vBase[16] / emae_ref) * POND_IMP;
-  const varImpBase  = 0; // no tenemos dato real, dejamos neutro
-  // Usamos ratio de VA proyectado vs base si hay suficientes sectores
-  const incidImpP = sumIncidProy !== 0 ? sumIncidProy * (pondImplImp / (1 - pondImplImp)) : 0;
+  const varImpProy  = proyInputs['IMP'] !== undefined ? proyInputs['IMP'] : null;
+  const incidImpP   = varImpProy !== null ? varImpProy / 100 * pondImplImp * 100 : 0;
+  if (varImpProy !== null) { sumIncidProy += incidImpP; nSectores++; }
+  const idxBaseImp  = vBase[16];
+  const idxPrevImp  = vPrev ? vPrev[16] : null;
+  const idxProyImp  = varImpProy !== null ? idxBaseImp * (1 + varImpProy / 100) : null;
+  const varMensImp  = (idxProyImp !== null && idxPrevImp !== null) ? (idxProyImp / idxPrevImp - 1) * 100 : null;
+  const changedImp  = proyInputs['IMP'] !== undefined;
 
   const trImp = document.createElement('tr');
-  trImp.className = 'imp-row';
   trImp.innerHTML = `
     <td><span class="cod-imp">IMP</span>Impuestos netos de subsidios</td>
-    <td class="num">${f2(vBase[16])}</td>
-    <td class="num">${vPrev && vPrev[16] ? f2(vPrev[16]) : '—'}</td>
-    <td class="imp-note cell-proy" colspan="3">↳ sigue VA proyectado</td>
-    <td class="num cell-result ${incidImpP >= 0 ? 'pos' : 'neg'}">${nSectores > 0 ? f2(incidImpP) : '—'}</td>
+    <td class="num">${f2(idxBaseImp)}</td>
+    <td class="num">${idxPrevImp !== null ? f2(idxPrevImp) : '—'}</td>
+    <td class="cell-proy"><input class="sim-input${changedImp ? ' changed' : ''}"
+         style="border-color:${changedImp ? '#7c3aed' : ''};background:${changedImp ? '#f5f3ff' : ''}"
+         data-cod="IMP" data-base="${idxBaseImp}" data-prev="${idxPrevImp || ''}" data-type="idx"
+         value="${idxProyImp !== null ? f2(idxProyImp) : ''}"
+         type="text" inputmode="decimal" placeholder="—"
+         onfocus="onFocusProy(this)" onblur="onBlurProy(this)" onkeydown="onKeyDownProy(this, event)"></td>
+    <td class="cell-proy"><input class="sim-input${changedImp ? ' changed' : ''}"
+         style="border-color:${changedImp ? '#7c3aed' : ''};background:${changedImp ? '#f5f3ff' : ''}"
+         data-cod="IMP" data-base="${idxBaseImp}" data-prev="${idxPrevImp || ''}" data-type="var"
+         value="${varImpProy !== null ? f1(varImpProy) : ''}"
+         type="text" inputmode="decimal" placeholder="—"
+         onfocus="onFocusProy(this)" onblur="onBlurProy(this)" onkeydown="onKeyDownProy(this, event)"></td>
+    <td class="cell-proy"><input class="sim-input${changedImp ? ' changed' : ''}"
+         style="border-color:${changedImp ? '#7c3aed' : ''};background:${changedImp ? '#f5f3ff' : ''}"
+         data-cod="IMP" data-base="${idxBaseImp}" data-prev="${idxPrevImp || ''}" data-type="mens"
+         value="${varMensImp !== null ? f1(varMensImp) : ''}"
+         type="text" inputmode="decimal" placeholder="—"
+         onfocus="onFocusProy(this)" onblur="onBlurProy(this)" onkeydown="onKeyDownProy(this, event)"></td>
+    <td class="num cell-result ${incidImpP >= 0 ? 'pos' : 'neg'}">${varImpProy !== null ? f2(incidImpP) : '—'}</td>
   `;
   tbody.appendChild(trImp);
 
-  const totalProy = sumIncidProy + (nSectores > 0 ? incidImpP : 0);
+  const totalProy = sumIncidProy;
 
   const emae_prev = vPrev ? vPrev[17] : null;
   document.getElementById('tfoot-proy').innerHTML = `
