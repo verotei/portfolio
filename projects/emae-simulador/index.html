@@ -433,8 +433,17 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
 <div class="table-section">
   <div class="table-header">
     <div class="table-title">Variaciones e incidencias sectoriales</div>
-    <div class="table-subtitle">Modificá la variación simulada de cualquier sector para recalcular en tiempo real</div>
   </div>
+  <details style="margin-bottom:14px">
+    <summary style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:8px 16px;font-size:0.75rem;color:#15803d;cursor:pointer;font-weight:600">
+      ¿Cómo usar?
+    </summary>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 6px 6px;padding:12px 16px;font-size:0.75rem;color:#15803d;line-height:1.8">
+      Ingresá la variación interanual (%) que querés simular en la columna <strong>Var. simulada %</strong>.<br><br>
+      El simulador recalcula en tiempo real la incidencia sectorial y la variación del EMAE agregado con tus supuestos.<br><br>
+      Usá Enter para pasar al sector siguiente.
+    </div>
+  </details>
   <table>
     <thead>
       <tr>
@@ -455,7 +464,6 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
 <div class="table-section" id="table-proy" style="display:none">
   <div class="table-header">
     <div class="table-title">Proyección sectorial</div>
-    <div class="table-subtitle">Ingresá cualquiera de los tres valores — los otros dos se calculan solos</div>
   </div>
   <details style="margin-bottom:14px">
     <summary style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:6px;padding:8px 16px;font-size:0.75rem;color:#5b21b6;cursor:pointer;font-weight:600">
@@ -465,7 +473,7 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
       Cada sector muestra como referencia el índice de un año atrás (t‑12) y el del mes anterior (t‑1), para ayudarte a calibrar tus supuestos.<br><br>
       Tenés tres formas de ingresar tu proyección — usá la que te resulte más cómoda:<br>
       • <strong>Idx proy.</strong>: el nivel del índice que esperás para este mes<br>
-      • <strong>Var. i/a %</strong>: variación respecto al mismo mes del año anterior (tal como publica INDEC)<br>
+      • <strong>Var. i/a %</strong>: variación respecto al mismo mes del año anterior (t‑12)<br>
       • <strong>Var. mens. %</strong>: variación respecto al mes anterior (t‑1)<br><br>
       Ingresá cualquiera de los tres valores y los otros dos se calculan automáticamente. Usá Enter para pasar al siguiente sector.<br><br>
       Podés cargar uno o varios sectores. El resultado refleja la incidencia acumulada de los sectores ingresados.
