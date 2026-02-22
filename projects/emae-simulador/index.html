@@ -835,8 +835,8 @@ function populateSelectors() {
     selAño.value = ay;
     fillMeses(ay, am);
   }
-  selAño.addEventListener('change', () => { fillMeses(selAño.value); render(); });
-  document.getElementById('sel-mes').addEventListener('change', render);
+  selAño.addEventListener('change', () => { simInputs = {}; fillMeses(selAño.value); render(); });
+  document.getElementById('sel-mes').addEventListener('change', () => { simInputs = {}; render(); });
 }
 
 function fillMeses(año, selectMes) {
