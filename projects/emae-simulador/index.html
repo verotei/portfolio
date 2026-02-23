@@ -502,11 +502,9 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
 
 <div class="footnote">
   <strong>Metodología:</strong> El simulador replica la estructura del EMAE base 2004=100 publicado por INDEC.
-  La incidencia de cada sector se calcula usando ponderadores implícitos obtenidos como
-  (idx<sub>sector, t‑12</sub> / idx<sub>EMAE, t‑12</sub>) × ponderación base 2004, multiplicados por la variación del sector en el período.
   <strong>Casos especiales:</strong>
   Impuestos netos de subsidios: se simulan como un sector más, ingresando una variación interanual propia. Por defecto toman su variación real observada.
-  Sector P (Hogares privados con servicio doméstico, pond. 0,63%): no cuenta con índice mensual; su ponderación se redistribuye proporcionalmente entre los sectores A–O e Impuestos (×1,006312) para que los ponderadores sumen 100%.
+  Sector P (Hogares privados con servicio doméstico, pond. 0,63%): no cuenta con índice mensual; su ponderación se redistribuye proporcionalmente entre los sectores A–O e Impuestos.
   Estos tratamientos, junto con el encadenamiento de índices, explican la diferencia residual que puede observarse respecto al dato publicado por INDEC. |
   <strong>Fuente:</strong> INDEC, EMAE base 2004=100. Desarrollado por Verónica Teilletchea · <a href="https://www.linkedin.com/in/verónica-teilletchea" target="_blank">LinkedIn</a>
 </div>
