@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulador EMAE — Incidencias Sectoriales</title>
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -424,7 +425,7 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
   </div>
   <div class="kpi-card">
     <div class="kpi-label">Sectores con supuesto</div>
-    <div class="kpi-value val-neutral" id="kv-nsectores">0 / 15</div>
+    <div class="kpi-value val-neutral" id="kv-nsectores">0 / 16</div>
     <div class="kpi-sub">Ingresá variaciones para proyectar</div>
     <div class="kpi-bar"></div>
   </div>
@@ -497,7 +498,6 @@ tfoot tr td:first-child { color: var(--text); font-size: 0.78rem; }
     <tfoot id="tfoot-proy"></tfoot>
   </table>
 </div>
-
 
 
 <div class="footnote">
@@ -1251,7 +1251,7 @@ function renderProy() {
     setKPI('kv-ultimo', varUlt, '%', 'bar-ultimo');
   }
 
-  document.getElementById('kv-nsectores').textContent = `${nSectores} / 15`;
+  document.getElementById('kv-nsectores').textContent = `${nSectores} / 16`;
   highlightTop('tbody-proy');
 }
 
